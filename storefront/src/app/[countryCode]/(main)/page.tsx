@@ -6,9 +6,9 @@ import { getCollectionsWithProducts } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 
 export const metadata: Metadata = {
-  title: "Medusa Next.js Starter Template",
+  title: "Prášek Archivy | CBDsvet.cz",
   description:
-    "A performant frontend ecommerce starter template with Next.js 14 and Medusa.",
+    "CBD prášek je vyroben z konopí a obsahuje vysoké množství CBD. Je to přírodní produkt, který se používá k léčbě různých zdravotních problémů.",
 }
 
 export default async function Home({

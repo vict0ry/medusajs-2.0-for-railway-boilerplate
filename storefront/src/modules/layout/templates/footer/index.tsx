@@ -1,154 +1,95 @@
-import { getCategoriesList } from "@lib/data/categories"
-import { getCollectionsList } from "@lib/data/collections"
-import { Text, clx } from "@medusajs/ui"
-
-import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
-
+import FooterBG from "/public/footer-bg.svg"
+import Image from "next/image"
+import FooterQR from "/public/footer-qr.svg"
 export default async function Footer() {
-  const { collections } = await getCollectionsList(0, 6)
-  const { product_categories } = await getCategoriesList(0, 6)
+  // const { collections } = await getCollectionsList(0, 6)
+  // const { product_categories } = await getCategoriesList(0, 6)
 
   return (
-    <footer className="border-t border-ui-border-base w-full">
-      <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
-            <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
-            >
-              Medusa Store
-            </LocalizedClientLink>
+    <footer className="relative border-t border-ui-border-base w-full">
+      <Image
+        src={FooterBG}
+        alt="Footer Background"
+        className="absolute inset-0 -z-10 h-full w-full object-cover object-top"
+        fill
+        sizes="100vw"
+        priority
+      />
+
+      <div className=" grid grid-cols-1 md:grid-cols-2 bg-black/20 justify-items-center">
+
+        <div className="hover:bg-black/60 transition-all duration-200 ease-in-out w-full mx-auto flex flex-col gap-y-4 px-10 py-14">
+          <div className="max-w-xl flex flex-col gap-y-4 px-8 ">
+            <h2 className="text-2xl font-bold text-gray-100">Užitečné informace</h2>
+            <p className="text-sm text-gray-200">
+              Všechny konopné produkty na našich stránkách obsahují CBD a téměř žádné THC - pod 1 %. Nejsou psychoaktivní. Naše konopné produkty nejsou určeny ke konzumaci, ke spalování ani k inhalaci. Využijte je k účelům průmyslovým, technickým a zahradnickým, jakož i k obchodu s konopím za těmito účely.
+            </p>
+            <p className="text-sm text-gray-200">
+              Zákaz prodeje CBD výrobků osobám mladším 18 let!
+            </p>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {product_categories && product_categories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categories
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {product_categories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
+        </div>
 
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
 
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Collections
-                </span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/nextjs-starter-medusa"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Source code
-                  </a>
-                </li>
+
+        <div className="hover:bg-black/60 transition-all duration-200 ease-in-out w-full mx-auto flex flex-col gap-y-4 px-10 py-14">
+          <div className="max-w-xl flex flex-col gap-y-4 px-8 ">
+            <h2 className="text-2xl font-bold text-gray-100">Kontakty</h2>
+            <p className="text-sm text-gray-200">
+              <ul>
+                <li className="text-sm text-gray-200"> Tel. číslo:  777 666 683  </li>
+                <li className="text-sm text-gray-200"> E-mail: zakaznici@cbdsvet.cz  </li>
               </ul>
-            </div>
+            </p>
+            <ul>
+              <li className="text-sm text-gray-200 hover:underline"> Cookies </li>
+              <li className="text-sm text-gray-200 hover:underline"> Obchodní podmínky </li>
+              <li className="text-sm text-gray-200 hover:underline"> Informace o zpracování osobních údajů  </li>
+            </ul>
           </div>
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
-          <Text className="txt-compact-small">
-            © {new Date().getFullYear()} Medusa Store. All rights reserved.
-          </Text>
-          <MedusaCTA />
+        <div className="hover:bg-black/60 transition-all duration-200 ease-in-out w-full mx-auto flex flex-col gap-y-4 px-10 py-14">
+          <div className="max-w-xl flex flex-col gap-y-4 px-8 ">
+            <h2 className="text-2xl font-bold text-gray-100">Adresa</h2>
+            <p className="text-sm text-gray-200">
+              Plzeňská 2576/210<br />
+              Praha<br />
+              150 00<br />
+            </p>
+            <p className="text-sm text-gray-200">
+              Distributor:<br />
+              Creativeland s.r.o. <br />
+              Jaurisova 515/4 <br />
+              Hlavní město Praha <br />
+              140 00
+            </p>
+          </div>
         </div>
+        <div className="hover:bg-black/60 transition-all duration-200 ease-in-out w-full mx-auto flex flex-col gap-y-4 px-10 py-14">
+          <div className="max-w-xl flex flex-col gap-y-4 px-8 ">
+            <h2 className="text-2xl font-bold text-gray-100">Testy a certifikace na jednom místě</h2>
+            <p className="text-sm text-gray-200">
+
+              Mějte přehled o tom, co nakupujete. Stačí naskenovat QR kód a ten Vás přesměruje na stránku e-shopu, kde je přehledný seznamtestů a certifikací produktů, které prodáváme.
+
+            </p>
+            <Image
+              src={FooterQR}
+              alt="Footer QR"
+              width={50}
+              height={50}
+            />
+          </div>
+        </div>
+
+      </div>
+      <div className="py-2">
+
+        <div className="flex items-center justify-center gap-x-2">
+          <p className="text-sm text-gray-200">© 2019 CBD Svět</p>
+          <p className="text-sm text-gray-200">Všechna práva vyhrazena.</p>
+        </div>
+
       </div>
     </footer>
   )
