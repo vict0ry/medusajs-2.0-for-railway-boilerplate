@@ -21,7 +21,7 @@ const Categories = ({ product_categories }: { product_categories: StoreProductCa
           <div className="h-10 w-full"
             onMouseEnter={() => setIsOpen(false)}
           >
-            <div className='content-container overflow-x-auto no-scrollbar h-full flex sm:justify-center justify-start items-center gap-x-6  '>
+            <div className='content-container overflow-x-auto no-scrollbar h-full flex lg:justify-center justify-start items-center gap-x-6  '>
               <div className='h-full flex '>
                 {product_categories && product_categories.map((category) => {
                   if (category.parent_category) {
@@ -34,7 +34,7 @@ const Categories = ({ product_categories }: { product_categories: StoreProductCa
                       id: child.id,
                     })) || null
                   return (
-                    <div key={category.id} className={clsx(" h-full items-center flex px-6 hover:bg-white text-white hover:text-black",{
+                    <div key={category.id} className={clsx(" h-full items-center flex px-4 hover:bg-white text-white hover:text-black",{
                       "bg-white text-black": isOpen && category.id === categoryData?.id
                     })}
                       onMouseEnter={() => {

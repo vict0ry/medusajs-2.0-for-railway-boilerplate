@@ -18,7 +18,7 @@ export default async function Footer() {
 
       <div className=" grid grid-cols-1 md:grid-cols-2 bg-black/20 justify-items-center">
 
-        <div className="hover:bg-black/60 transition-all duration-200 ease-in-out w-full mx-auto flex flex-col gap-y-4 px-10 py-14">
+        <div className="hover:bg-black/60 transition-all duration-200 ease-in-out w-full mx-auto flex flex-col justify-center gap-y-4 px-10 py-14">
           <div className="max-w-xl flex flex-col gap-y-4 px-8 ">
             <h2 className="text-2xl font-bold text-gray-100">Užitečné informace</h2>
             <p className="text-sm text-gray-200">
