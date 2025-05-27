@@ -195,14 +195,21 @@ export async function enrichLineItems(
 export async function setShippingMethod({
   cartId,
   shippingMethodId,
+  pickup_branch,
 }: {
   cartId: string
   shippingMethodId: string
+  pickup_branch?: any
 }) {
   return sdk.store.cart
     .addShippingMethod(
       cartId,
-      { option_id: shippingMethodId },
+      {
+        option_id: shippingMethodId,
+        data: {
+          pickup_branch,
+        },
+      },
       {},
       getAuthHeaders()
     )

@@ -1,5 +1,36 @@
 "use client"
 
+interface PacketaBranch {
+  id: string;
+  name: string;
+  place: string;
+  street: string;
+  city: string;
+  zip: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  url: string;
+  // Add other properties you need
+}
+
+declare global {
+  interface Window {
+    Packeta: {
+      Widget: {
+        pick: (
+          apiKey: string,
+          callback: (branch: PacketaBranch) => void,
+          options?: {
+            country?: string;
+            language?: string;
+            appIdentity?: string;
+          }
+        ) => void;
+      };
+    };
+  }
+}
 import { RadioGroup } from "@headlessui/react"
 import { CheckCircleSolid } from "@medusajs/icons"
 import { Button, Heading, Text, clx } from "@medusajs/ui"
@@ -7,7 +38,7 @@ import { Button, Heading, Text, clx } from "@medusajs/ui"
 import Divider from "@modules/common/components/divider"
 import Radio from "@modules/common/components/radio"
 import ErrorMessage from "@modules/checkout/components/error-message"
-import { useRouter, useSearchParams, usePathname } from "next/navigation"
+import { useRouter, useSearchParams, usePathname, useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { setShippingMethod } from "@lib/data/cart"
 import { convertToLocale } from "@lib/util/money"
@@ -28,6 +59,7 @@ const Shipping: React.FC<ShippingProps> = ({
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
+  const { countryCode } = useParams()
 
   const isOpen = searchParams.get("step") === "delivery"
 
@@ -46,6 +78,9 @@ const Shipping: React.FC<ShippingProps> = ({
 
   const set = async (id: string) => {
     setIsLoading(true)
+
+    loadLocalPacketaWidget(id)
+
     await setShippingMethod({ cartId: cart.id, shippingMethodId: id })
       .catch((err) => {
         setError(err.message)
@@ -55,9 +90,67 @@ const Shipping: React.FC<ShippingProps> = ({
       })
   }
 
+
+  console.log("cart", cart)
+
+
+  const loadLocalPacketaWidget = (shipping_option_id: string) => {
+
+    const onBranchSelected = async (branch: PacketaBranch) => {
+      setIsLoading(true)
+      await setShippingMethod({
+        cartId: cart.id,
+        shippingMethodId: shipping_option_id,
+        pickup_branch: branch
+      }).catch((err) => {
+        setError(err.message)
+      })
+        .finally(() => {
+          setIsLoading(false)
+        })
+    }
+
+    const _selectedShippingMethod = availableShippingMethods?.find(
+      (method) => method.id === shipping_option_id
+    )
+
+
+    if (_selectedShippingMethod?.data?.pickupPoints) {
+      if (window.Packeta) {
+        window.Packeta.Widget.pick(
+          process.env.NEXT_PUBLIC_PACKETA_API_KEY!,
+          onBranchSelected,
+          {
+            country: countryCode as string || 'cz',
+            language: 'en',
+            appIdentity: 'cbdsvet-medusajs-store'
+          }
+        );
+      }
+    }
+
+  }
+
+
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://widget.packeta.com/v6/www/js/library.js';
+    script.async = true;
+    script.onload = () => {
+      console.log('Packeta widget loaded');
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
 
   return (
     <div className="bg-white">
@@ -116,7 +209,12 @@ const Shipping: React.FC<ShippingProps> = ({
                       />
                       <span className="text-base-regular">{option.name}</span>
                     </div>
-                    <span className="justify-self-end text-ui-fg-base">
+                    <span className="flex gap-x-3 justify-self-end text-ui-fg-base">
+                      <span className="text-ui-fg-subtle text-xs bg-blue-100 rounded-md px-2 py-1">
+                        {option.data?.pickupPoints
+                          ? "Pickup at branch"
+                          : "Home Delivery"}
+                      </span>
                       {convertToLocale({
                         amount: option.amount!,
                         currency_code: cart?.currency_code,
