@@ -1,4 +1,4 @@
-import { loadEnv, Modules, defineConfig, ContainerRegistrationKeys } from '@medusajs/utils';
+import { loadEnv, Modules, defineConfig } from '@medusajs/utils';
 import {
   ADMIN_CORS,
   AUTH_CORS,
@@ -60,7 +60,6 @@ const medusaConfig = {
               api_key: process.env.PACKETA_API_KEY,
               api_key_password: process.env.PACKETA_API_SECRET,
             },
-            dependencies: [ContainerRegistrationKeys.QUERY],
           },
         ],
       },
@@ -213,4 +212,5 @@ const medusaConfig = {
   ],
 };
 
+console.log(JSON.stringify(medusaConfig, null, 2));
 export default defineConfig(medusaConfig);
