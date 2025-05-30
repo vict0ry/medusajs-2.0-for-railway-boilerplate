@@ -10,7 +10,7 @@ const Hero = () => {
             level="h1"
             className="text-3xl leading-10 text-ui-fg-base font-normal"
           >
-            Well done! You have successfully deployed your  2.0 store on Railway!
+            Well done! You have successfully deployed your  2.0 store on Railway! test
           </Heading>
           <Heading
             level="h2"
