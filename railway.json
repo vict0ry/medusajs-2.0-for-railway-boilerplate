@@ -1,0 +1,9 @@
+{
+  "build": {
+    "rootDirectory": "storefront",
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
+    "startCommand": "npm run start"
+  }
+}
+
