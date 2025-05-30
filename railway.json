@@ -1,8 +1,7 @@
 {
   "build": {
-    "rootDirectory": "storefront",
-    "installCommand": "npm install  --no-frozen-lockfile",
-    "buildCommand": "npm run build",
-    "startCommand": "npm run start"
+    "installCommand": "pnpm install --no-frozen-lockfile",
+    "buildCommand": "pnpm run build",
+    "startCommand": "pnpm run start"
   }
 }
