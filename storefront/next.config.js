@@ -14,10 +14,16 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+
     remotePatterns: [
       {
         protocol: "http",
         hostname: "localhost",
+        
+      },
+          {
+        protocol: "https",
+        hostname: "strapi-production-d28d.up.railway.app",
         
       },
       { // Note: needed to serve images from /public folder
