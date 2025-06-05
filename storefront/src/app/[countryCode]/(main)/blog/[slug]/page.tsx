@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic'
+
 export async function generateStaticParams({ 
   params 
 }: { 
@@ -46,6 +48,7 @@ export async function generateMetadata({
     },
   };
 }
+
 
 const BlogDetailsPage = async ({ 
   params 

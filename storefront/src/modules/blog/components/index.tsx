@@ -1,4 +1,6 @@
 import { fetchBlogs } from "@lib/util/fetch-api";
+import LocalizedClientLink from "@modules/common/components/localized-client-link";
+import Image from "next/image";
 import Link from "next/link";
 
 const BlogsPage =  async () => {
@@ -15,14 +17,18 @@ const BlogsPage =  async () => {
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {blogs.map((blog:any) => (
             <article key={blog.id} className="flex flex-col items-start justify-between">
-              <div className="relative w-full">
-                <img
-                  alt={`${blog.alternativeText}`}
+                <div className="relative w-full">
+                <Image
+                  alt={blog.alternativeText || blog.Title}
                   src={`${process.env.STRIPE_API_URL}${blog.CoverImage.url}`}
+                  width={800}
+                  height={450}
                   className="aspect-video w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
+                  priority={false}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10" />
-              </div>
+                </div>
               <div className="max-w-xl">
                 <div className="mt-8 flex items-center gap-x-4 text-xs">
                 <time dateTime={blog.publishedAt} className="text-gray-500">
@@ -49,13 +55,13 @@ const BlogsPage =  async () => {
                   <p className="mt-5 line-clamp-3 text-sm/6 text-gray-600">{blog.Content}</p>
                 </div>
                  <div className="mt-6">
-                  <Link
+                  <LocalizedClientLink
                     href={`/blog/${blog.Slug}`}
                     className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
                     aria-label={`Read more: ${blog.Title}`}
                   >
                     Read more <span aria-hidden="true">→</span>
-                  </Link>
+                  </LocalizedClientLink>
                 </div>
               </div>
             </article>
