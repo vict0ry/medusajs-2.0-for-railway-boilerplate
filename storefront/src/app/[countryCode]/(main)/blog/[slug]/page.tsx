@@ -11,7 +11,7 @@ export async function generateStaticParams({
   params: { countryCode: string } 
 }) {
   const blogs = await fetchBlogs();
-  return blogs.map((blog: any) => ({
+  return blogs.data.map((blog: any) => ({
     countryCode: params.countryCode,
     id: blog.id.toString(), // Ensure id is string
   }));

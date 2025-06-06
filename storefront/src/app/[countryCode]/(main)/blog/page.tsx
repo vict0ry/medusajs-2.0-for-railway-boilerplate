@@ -1,10 +1,18 @@
 import BlogsPage from '@modules/blog/components'
 import React from 'react'
 
-function page() {
+async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+
+  const resolvedSearchParams = await searchParams;
+  const currentPage = resolvedSearchParams?.page;
+
   return (
     <div>
-        <BlogsPage />
+        <BlogsPage currentPage={currentPage} />
     </div>
   )
 }

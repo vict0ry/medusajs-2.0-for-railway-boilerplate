@@ -1,10 +1,15 @@
+'"use client";'
 import { fetchBlogs } from "@lib/util/fetch-api";
 import LocalizedClientLink from "@modules/common/components/localized-client-link";
 import Image from "next/image";
-import Link from "next/link";
+import Pagination from "./Pagination";
 
-const BlogsPage =  async () => {
-    const blogs = await fetchBlogs();
+
+const BlogsPage = async (
+  currentPage: any
+) => {
+    const { data: blogs, meta } = await fetchBlogs(currentPage.currentPage ? Number(currentPage.currentPage) : 1, 9);
+     
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -15,7 +20,14 @@ const BlogsPage =  async () => {
             <p className="mt-2 text-lg/8 text-gray-600">
             Discover the latest insights, benefits, and research on CBD products to enhance your wellness journey.
             </p>
-        </div>
+        </div>{
+        blogs.length === 0 ? (
+          <div className="mt-12 text-center">
+            <p className="text-lg text-gray-500">
+              No blog posts found.
+            </p>
+          </div>
+        ):(
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {blogs.map((blog:any) => (
             <article key={blog.id} className="flex flex-col items-start justify-between">
@@ -69,6 +81,13 @@ const BlogsPage =  async () => {
             </article>
           ))}
         </div>
+        )}
+         {meta.pagination.pageCount > 1 && (
+              <Pagination
+                currentPage={meta.pagination.page}
+                totalPages={meta.pagination.pageCount}
+              />
+            )}
       </div>
     </div>
   )
