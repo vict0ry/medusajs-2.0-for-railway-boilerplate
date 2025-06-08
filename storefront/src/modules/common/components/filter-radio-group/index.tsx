@@ -1,5 +1,6 @@
 import { EllipseMiniSolid } from "@medusajs/icons"
-import { Label, RadioGroup, Text, clx } from "@medusajs/ui"
+import { Label, RadioGroup, Text, Select, clx } from "@medusajs/ui"
+import { useEffect, useState } from "react"
 
 type FilterRadioGroupProps = {
   title: string
@@ -12,6 +13,23 @@ type FilterRadioGroupProps = {
   "data-testid"?: string
 }
 
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  return isMobile
+}
+
 const FilterRadioGroup = ({
   title,
   items,
@@ -19,6 +37,40 @@ const FilterRadioGroup = ({
   handleChange,
   "data-testid": dataTestId,
 }: FilterRadioGroupProps) => {
+  const isMobile = useIsMobile()
+
+  const handleSelectChange = (newValue: string) => {
+    handleChange(newValue)
+  }
+
+  if (isMobile) {
+    return (
+      <div className="flex flex-col gap-y-2">
+        <Text className="txt-compact-small-plus text-ui-fg-muted">{title}</Text>
+        <Select
+          value={value}
+          onValueChange={handleSelectChange}
+          data-testid={dataTestId}
+        >
+          <Select.Trigger className="w-full">
+            <Select.Value placeholder="Select an option" />
+          </Select.Trigger>
+          <Select.Content>
+            {items?.map((item) => (
+              <Select.Item
+                key={item.value}
+                value={item.value}
+                data-testid="select-item"
+              >
+                {item.label}
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select>
+      </div>
+    )
+  }
+
   return (
     <div className="flex gap-x-3 flex-col gap-y-3">
       <Text className="txt-compact-small-plus text-ui-fg-muted">{title}</Text>

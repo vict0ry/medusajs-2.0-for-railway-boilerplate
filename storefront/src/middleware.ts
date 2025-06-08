@@ -29,6 +29,8 @@ async function getRegionMap() {
       },
     }).then((res) => res.json())
 
+    console.log("regions", regions)
+
     if (!regions?.length) {
       notFound()
     }
