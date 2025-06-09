@@ -6,38 +6,60 @@ import Refresh from "@modules/common/icons/refresh"
 
 import Accordion from "./accordion"
 import { HttpTypes } from "@medusajs/types"
+import { Tabs } from "@medusajs/ui"
+import { useMemo } from "react"
 
 type ProductTabsProps = {
   product: HttpTypes.StoreProduct
 }
 
+interface InventoryLevel {
+  id: string
+  location_name: string
+  stocked_quantity: number
+}
+
 const ProductTabs = ({ product }: ProductTabsProps) => {
-  const tabs = [
-    {
-      label: "Product Information",
-      component: <ProductInfoTab product={product} />,
-    },
-    {
-      label: "Shipping & Returns",
-      component: <ShippingInfoTab />,
-    },
-  ]
+  const tabs = useMemo(() => {
+    return [
+      {
+        label: "Product Information",
+        component: <ProductInfoTab product={product} />,
+      },
+      {
+        label: "Inventory Information",
+        component: <InventoryInfoTab product={product} />,
+      },
+      {
+        label: "Shipping & Returns",
+        component: <ShippingInfoTab />,
+      },
+    ]
+  }, [product])
 
   return (
-    <div className="w-full">
-      <Accordion type="multiple">
+    <Tabs defaultValue="product-information" className="w-full">
+      <Tabs.List>
         {tabs.map((tab, i) => (
-          <Accordion.Item
+          <Tabs.Trigger
             key={i}
-            title={tab.label}
-            headingSize="medium"
-            value={tab.label}
+            value={tab.label.toLowerCase().replace(" ", "-")}
+            className="flex-1"
           >
-            {tab.component}
-          </Accordion.Item>
+            {tab.label}
+          </Tabs.Trigger>
         ))}
-      </Accordion>
-    </div>
+      </Tabs.List>
+      {tabs.map((tab, j) => (
+        <Tabs.Content
+          key={j}
+          value={tab.label.toLowerCase().replace(" ", "-")}
+          className="py-8"
+        >
+          {tab.component}
+        </Tabs.Content>
+      ))}
+    </Tabs>
   )
 }
 
@@ -73,6 +95,54 @@ const ProductInfoTab = ({ product }: ProductTabsProps) => {
             </p>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+const InventoryInfoTab = ({ product }: ProductTabsProps) => {
+  return (
+    <div className="text-small-regular py-8">
+      <div className="flex flex-col gap-y-4">
+        {product.variants?.map((variant) => (
+          <div key={variant.id} className="border-b border-gray-200 pb-4">
+            <h3 className="font-semibold mb-2">
+              {variant.title || "Default Variant"}
+            </h3>
+            <div className="grid grid-cols-2 gap-x-8">
+              <div>
+                <span className="font-semibold">SKU:</span>
+                <p>{variant.sku || "-"}</p>
+              </div>
+              <div>
+                <span className="font-semibold">Total Inventory:</span>
+                <p>{variant.inventory_quantity || 0}</p>
+              </div>
+              <div>
+                <span className="font-semibold">Manage Inventory:</span>
+                <p>{variant.manage_inventory ? "Yes" : "No"}</p>
+              </div>
+              <div>
+                <span className="font-semibold">Allow Backorder:</span>
+                <p>{variant.allow_backorder ? "Yes" : "No"}</p>
+              </div>
+            </div>
+
+            {(variant as any).inventory_levels && (variant as any).inventory_levels.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-semibold mb-2">Warehouse Inventory:</h4>
+                <div className="grid grid-cols-1 gap-y-2">
+                  {(variant as any).inventory_levels.map((level: InventoryLevel) => (
+                    <div key={level.id} className="flex justify-between items-center">
+                      <span>{level.location_name || "Unknown Location"}</span>
+                      <span className="font-medium">{level.stocked_quantity}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   )
