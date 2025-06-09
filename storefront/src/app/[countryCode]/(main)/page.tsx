@@ -4,6 +4,7 @@ import FeaturedProducts from "@modules/home/components/featured-products"
 import Hero from "@modules/home/components/hero"
 import NewProducts from "@modules/home/components/new-products"
 import FeaturedBlogs from "@modules/home/components/featured-blogs"
+import CategoryShowcase from "@modules/home/components/category-showcase"
 import { getRegion } from "@lib/data/regions"
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ export default async function Home({
   return (
     <>
       <Hero />
+      <CategoryShowcase />
       <NewProducts region={region} countryCode={countryCode} />
       <FeaturedProducts region={region} countryCode={countryCode} />
       <FeaturedBlogs />
