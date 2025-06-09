@@ -1,6 +1,6 @@
 "use client"
 
-import FilterRadioGroup from "@modules/common/components/filter-radio-group"
+import { Select, Text } from "@medusajs/ui"
 
 export type SortOptions = "price_asc" | "price_desc" | "created_at"
 
@@ -35,13 +35,29 @@ const SortProducts = ({
   }
 
   return (
-    <FilterRadioGroup
-      title="Sort by"
-      items={sortOptions}
-      value={sortBy}
-      handleChange={handleChange}
-      data-testid={dataTestId}
-    />
+    <div className="flex flex-col gap-y-2">
+      <Text className="txt-compact-small-plus text-ui-fg-muted">Sort by</Text>
+      <Select
+        value={sortBy}
+        onValueChange={handleChange}
+        data-testid={dataTestId}
+      >
+        <Select.Trigger className="w-full">
+          <Select.Value placeholder="Select sorting option" />
+        </Select.Trigger>
+        <Select.Content>
+          {sortOptions.map((option) => (
+            <Select.Item
+              key={option.value}
+              value={option.value}
+              data-testid="select-item"
+            >
+              {option.label}
+            </Select.Item>
+          ))}
+        </Select.Content>
+      </Select>
+    </div>
   )
 }
 
