@@ -113,6 +113,9 @@ export class PacketaClient {
         );
       });
 
+    this.logger_.info(JSON.stringify(order, null, 2));
+
+    this.logger_.info(JSON.stringify(order_data, null, 2));
 
     const payment_provider_id =
       order_data.payment_collections[0].payment_sessions[0].provider_id;
@@ -130,14 +133,14 @@ export class PacketaClient {
           surname: order.shipping_address.last_name,
           phone: order.shipping_address.phone || order.customer.phone,
           email: order_data.email,
-          value: order.total,
+          value: order_data.summary.paid_total,
           currency: order.currency_code.toUpperCase(),
           cod: isCOD ? Math.floor(order.total) : 0,
           weight:
             items.reduce((sum, item) => sum + (item?.variant?.weight || 0), 1) /
               1000 || 0.1,
           eshop: "cbdsvet.cz",
-          number: order.display_id,
+          number: order_data.display_id,
           street: order.shipping_address.address_1,
           houseNumber: order.shipping_address.address_2,
           city: order.shipping_address.city,
