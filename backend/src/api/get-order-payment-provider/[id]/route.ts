@@ -9,7 +9,7 @@ export const POST = async (
   res: MedusaResponse
 ) => {
   const { id } = req.params;
-  console.log(req.body)
+  
   const body = typeof req.body === "string" ? JSON.parse(req.body as any) : req.body;
 
 
@@ -27,6 +27,7 @@ export const POST = async (
         "id",
         "payment_collections.id",
         "payment_collections.payment_sessions.provider_id",
+        "*"
       ],
       filters: { id: [id] },
     });

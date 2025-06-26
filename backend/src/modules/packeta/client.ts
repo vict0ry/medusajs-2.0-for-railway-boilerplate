@@ -1,5 +1,5 @@
 import { MedusaError } from "@medusajs/framework/utils";
-import {  Options } from "./service";
+import { Options } from "./service";
 import { PacketaCarrier } from "./types";
 import { Builder, Parser } from "xml2js";
 import { Logger } from "@medusajs/medusa";
@@ -81,12 +81,12 @@ export class PacketaClient {
     data: {
       shipping_carrier_id: string;
       shipping_carrier_name: string;
-      pickup_branch:any
+      pickup_branch: any;
     };
   }): Promise<any> {
     const { order, fulfillment, items, data: fulfillment_data } = data;
 
-    const result = await fetch(
+    const order_data = await fetch(
       `${BACKEND_URL}/get-order-payment-provider/${order.id}`,
       {
         method: "POST",
@@ -113,8 +113,9 @@ export class PacketaClient {
         );
       });
 
+
     const payment_provider_id =
-      result.payment_collections[0].payment_sessions[0].provider_id;
+      order_data.payment_collections[0].payment_sessions[0].provider_id;
 
     const isCOD = payment_provider_id === "pp_system_default";
 
@@ -122,17 +123,19 @@ export class PacketaClient {
       createPacket: {
         apiPassword: this.options.api_key_password,
         packetAttributes: {
-          addressId: fulfillment_data?.pickup_branch?.id || fulfillment_data.shipping_carrier_id,
+          addressId:
+            fulfillment_data?.pickup_branch?.id ||
+            fulfillment_data.shipping_carrier_id,
           name: order.shipping_address.first_name,
           surname: order.shipping_address.last_name,
           phone: order.shipping_address.phone || order.customer.phone,
-          email: order.customer.email,
+          email: order_data.email,
           value: order.total,
           currency: order.currency_code.toUpperCase(),
           cod: isCOD ? Math.floor(order.total) : 0,
           weight:
             items.reduce((sum, item) => sum + (item?.variant?.weight || 0), 1) /
-            1000 || 0.1, 
+              1000 || 0.1,
           eshop: "cbdsvet.cz",
           number: order.display_id,
           street: order.shipping_address.address_1,
