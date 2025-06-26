@@ -113,9 +113,6 @@ export class PacketaClient {
         );
       });
 
-    this.logger_.info(JSON.stringify(order, null, 2));
-
-    this.logger_.info(JSON.stringify(order_data, null, 2));
 
     const payment_provider_id =
       order_data.payment_collections[0].payment_sessions[0].provider_id;
